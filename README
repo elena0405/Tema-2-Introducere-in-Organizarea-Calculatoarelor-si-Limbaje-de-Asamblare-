@@ -1,0 +1,63 @@
+IONESCU ELENA 322CD
+TEMA 2 LA IOCLA
+
+	La prima cerinta, am creat eticheta while in care am efectuat urmatoarele operatii la fiecare pas :
+am mutat intr-un singur octet din eax(al) valoarea curenta din esi, in bl valoarea curenta din edi, am 
+facut xor al, bl, iar in edx am pus valoarea din al, deoarece rezultatul operatiei xor este retinut 
+in al, iar daca ecx nu a ajuns 0, se reiau pasii descrisi anterior. In final, am pus in edx toate valorile 
+calculate in loop-ul while.
+
+	La takul 2, am creat mai intai o eticheta mare , while, in care se vor efectua toate celelelalte 
+instructiuni pe care le voi detalia. La fiecare pas, am mutat in al valoarea curenta din esi(vectorul 
+plaintext) si l-am comparat cu 64. Daca este mai mic decat aceasta valoare, atunci caracterul curent
+din exi nu este litera, deci ma voi muta la urmatoarea instructiune(ultima in acest caz) in care voi pune
+valoarea acestuia nemodificata in edx(vectorul ciphertext), voi intera in continuare prin esi si ma
+voi intoarce la inceputul etichetei while daca mai am valori neiterate in acesta. Daca caracterul curent 
+din esi este intre mai mare decat 90, ma duc la eticheta next_instruction_2, in care compar caracterul
+curent cu 96. Daca este mai mic decat 96, atunci caracterul curent nu este cifra si ma mut la ultima
+instructiune, pe care am descris-o mai sus. In continuare, tot in cadrul etichetei next_instruction_2, 
+compar caraterul curent cu 123. Daca este mai mare sau egal decat aceasta valoare, inseamna ca
+ valoarea curenta din esi nu este litera, deci ma voi muta la ultima instructiune. Daca nu se intra
+pe niciunul din  cele doua cazuri mentionate mai sus in cadrul acestei etichete, atunci inseamna ca
+valoarea curenta este o litera mica si ii incrementez valoarea cu valoarea din edi. Daca nu am depasit
+ plaja de valori alocata pentru litere mici, atunci ma mut la ultima instructiune; in caz contrar, voi 
+intra in eticheta minimise_2, in care voi face scaderi repetate pana cand voi reajunge in intervalul
+ 97-122. Dupa efectuarea acestor operatii, ma voi duce la ultima instructiune. Intorcandu-ma la 
+instructiunile initiale, daca valoarea curenta din esi nu este nici mai  mica decat 65 si nici mai mare
+ decat 90, atunci am determinat o litera mare, pe care o incrementez  cu valoarea specificata in cheie.
+Apoi, o compar cu 90. Daca dupa incrementare nu se depaseste acesta valoare, ma voi muta la 
+ultima instructiune; in caz contrar, voi efectua scaderi repetate pana cand voi reajunge in plaja de 
+valori alocata pentru literele mari, anume 65-90. Dupa refacerea valorii, ma voi muta la ultima 
+instructiune. Voi continua aceste instructiuni cat timp voi mai avea valori neiterate in esi.
+
+	La taskul 3,  pentru a usura lucrul cu registrii, am declarat niste variabile in section .data, pe care 
+le-am initializat cu 0: in key_len voi stoca lungimea vectorului key, in plaintext_len voi stoca 
+lungimea vectorului plaintext, iar in var voi stoca valoarea cu care trebuie deplasata fiecare litera
+din vectorul plaintext. Modificarile pentru key_len si plaintext_len le-am facut inainte de eticheta 
+while. In eticheta while, am calculat mai intai valoarea pe care o voi muta in var, scazand din valoarea
+cureta din edi 65. In continuare, am mutat in al valoarea curenta din esi si am comparat- o cu 65. Daca este
+ mai mica, atunci intru pe cazul is_not_letter si voi pune in vectorul rezultat valoarea nemodificata, dupa care
+ma voi muta la ultima instructiune. Daca caracterul curent este mai mare decat 90, atunci intru pe cazul
+probably_lower_case, in care verifi daca este litera mica. In cadrul acestei etichete, daca valoarea este mai
+mica decat 97, atunci va fi intre 90 si 97, deci nu este caracter si ma mut la instructiunea is_not_letter; in caz
+contrar, daca este mai mare decat 122, ma mut tot in cazul de mai devreme. Daca valoarea este intre
+97 si 122, atunci am litera mica, deci o sa fac incrementarea ci valoarea stocata in var si o sa compar
+cu 122, ca sa vad daca am depasit plaja de valori; daca nu am depasit-o, ma mut la instructiunea 
+add_letter, in care adaug valoarea in edx. Daca valoarea este mai mare decat 122, o sa imi intre pe cazul
+minimise_lower_case, in care am aplicat algoritmul de micsorare pentru litere mici descris la taskul
+anterior. Dupa decrementari repetate, o sa imi intre in bucla  add_letter, in care adaug litera in vectorul 
+chipertext si incrementez in continuare prin vectorul key; daca am epuizat valorile, atunci resetez valoarea 
+registrului ebx, care imi itereaza prin acest vector si ma mut la ultima instructiune. Daca valoarea este intre
+65 si 90, atunci am gasit o litera mare, o incrementez si verific daca am depasi plaja de valori alocata 
+pentru litere mari; daca da, atunci intru pe cazul minimise_upper_case, in care aplic algoritmul descris 
+la taskul anterior pentru refacerea literelor mari, ma mut apoi la add_letter pentru a o adauga si , in sfarsit,
+la ultima instructiune.
+
+	La taskul 4,  am folosit din nou variabile alocate in section .data, pe care le-am folosit ca sa stochez
+lungimea vectorilor needle si haystack. "Nucleul " implementarii se afla in bucla while, la inceputul careia 
+verific daca am gasit subsirul in cazul probably_found_str: aici compar valoarea curenta din ebx cu cea din
+esi si daca nu sunt egale, atunci resetez registrul edx, care este folosit pe post de index pentru a itera prin
+vectorul needle si pun in edi valoarea lungimii sirului haystack + 1, deoarece acesta va fi valoarea returnata
+in cazul in care subsirul nu este gasit in sir. Dupa aceea, intru pe move_forward, in care verific daca mai am 
+valori neiterate in sirul initial. Daca nu se intra niciodata pe cazul restore, atunci inseamna ca am gasit subsirul
+si ies din while.
